@@ -1,5 +1,5 @@
 # fallout-terminal-hacker
-quick and dirty perl script to assist in terminal hacking in fallout games
+quick and dirty perl script to assist in terminal hacking in fallout games.  I've used it successfully in fallout 3, fallout new vegas and fallout 4.  should work anywhere the same game mechanic is used for terminal hacking.
 
 * enter words, one per line
 * empty line when done
@@ -19,7 +19,7 @@ egrep "^[a-z][aei][a-z][a-z][aeiou][a-z]$" /usr/share/dict/words |less
 the word is "denial"
 
 ```
-$ bin/fallout-terminal-hacker
+$ ./fallout-terminal-hacker
 enter words, one per line, empty word when done:
 > aerial
 > babied

@@ -18,3 +18,8 @@ nytprof.out
 *.o
 *.bs
 /_eumm/
+
+
+# Added by cargo
+
+/target

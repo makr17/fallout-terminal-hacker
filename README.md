@@ -1,9 +1,9 @@
 # fallout-terminal-hacker
-quick and dirty perl script to assist in terminal hacking in fallout games.  I've used it successfully in fallout 3, fallout new vegas and fallout 4.  should work anywhere the same game mechanic is used for terminal hacking.
+This is a quick and dirty program to assist in terminal hacking in fallout games.  I've used it successfully in Fallout 3, Fallout New Vegas and Fallout 4.  It should work anywhere the same game mechanic is used for terminal hacking.
 
 * enter words, one per line
 * empty line when done
-* script will make a suggestion, prefixed by '+'
+* script will suggest optimal guess
 * provide feedback from the game (number of characters matched)
 * word list is filtered based on the feedback
 * rinse/repeat
@@ -19,67 +19,45 @@ egrep "^[a-z][aei][a-z][a-z][aeiou][a-z]$" /usr/share/dict/words |less
 the word is "denial"
 
 ```
-$ ./fallout-terminal-hacker
-enter words, one per line, empty word when done:
-> aerial
-> babied
-> bagged
-> backer
-> ballad
-> bemoan
-> calves
-> canyon
-> citrus
-> decked
-> denial
-> dimmer
-> faucet
-> fasten
-> ferret
-> gambit
-> garden
-> genial
-> healer
-> heaven
-> harden
-> jagged
-> killer
->
-. aerial
-. babied
-+ bagged
-. backer
-. ballad
-. bemoan
-. calves
-. canyon
-. citrus
-. decked
-. denial
-. dimmer
-. faucet
-. fasten
-. ferret
-. gambit
-. garden
-. genial
-. healer
-. heaven
-. harden
-. jagged
-. killer
-which word was guessed?
-> bagged
-what was the count?
-> 0
-. aerial
-. citrus
-. denial
-+ genial
-which word was guessed?
-> genial
-what was the count?
-> 5
-+ denial
+$ cargo run
+   Compiling fallout-terminal-hacker v0.1.0 (/home/bracher/git/fallout-terminal-hacker)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.28s
+     Running `target/debug/fallout-terminal-hacker`
+Enter words, one per-line, empty line when done.
+aerial
+babied
+bagged
+backer
+ballad
+bemoan
+calves
+canyon
+citrus
+decked
+denial
+dimmer
+faucet
+fasten
+ferret
+gambit
+garden
+genial
+healer
+heaven
+harden
+jagged
+killer
+
+bagged is optimal
+What was the reported count?
+0
+{"citrus", "aerial", "denial", "genial"}
+genial is optimal
+What was the reported count?
+5
+{"denial"}
 $
 ```
+
+`denial` and `genial` actually have an equal chance of being the second guess,
+but it worked out this time for the example.

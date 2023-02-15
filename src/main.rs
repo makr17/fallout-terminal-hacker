@@ -2,45 +2,46 @@ use std::collections::{HashMap, HashSet};
 use std::io;
 
 fn main() {
-    let mut words: HashSet<String> = get_words();
-    let optimal = optimal(&words);
-    println!("{} is optimal", optimal);
+    let mut words = get_words();
     while words.len() > 1 {
-	let guess: String = get_guess();
-	let count: u32 = get_count();
-	words = filter_words(&words, count);
-	break;
+	let guess = optimal(&words);
+	println!("{} is optimal", guess);
+	let count = get_count();
+	words = filter_words(&guess, count, &words);
+	println!("{:?}", words);
     }
+}
+
+fn get_input() -> String {
+    let stdin = io::stdin();
+    let mut input = String::new();
+    let _read = stdin.read_line(&mut input);
+    input.pop();
+    input
 }
 
 fn get_words() -> HashSet<String> {
     let mut words = HashSet::new();
-    let stdin = io::stdin();
     println!("Enter words, one per-line, empty line when done.");
     loop {
-	let mut input = String::new();
-	stdin.read_line(&mut input);
-	input.pop();
+	let input = get_input();
 	if input.is_empty() {
 	    break;
 	}
-	words.insert(input.clone());
+	words.insert(input);
     }
     words
 }
 
-fn get_guess() -> String {
-
-    "".to_string()
-}
-
 fn get_count() -> u32 {
-    0
+    println!("What was the reported count?");
+    let count = get_input();
+    count.parse::<u32>().unwrap()
 }
 
 fn optimal(words: &HashSet<String>) -> String {
     let mut remains: Vec<&String> = words.iter().collect();
-    remains.sort();
+    remains.sort_unstable();
     let len = remains.len();
     let mut grid = vec![vec![0; len]; len];
     for i in 0..len {
@@ -58,7 +59,7 @@ fn optimal(words: &HashSet<String>) -> String {
 	intersects.insert(remains[i], tmp.len());
     }
     let mut sorted: Vec<(&&String, &usize)> = intersects.iter().collect();
-    sorted.sort_by(|a,b| a.1.cmp(&b.1).reverse());
+    sorted.sort_unstable_by(|a,b| a.1.cmp(&b.1).reverse());
     sorted.first().unwrap().0.clone().to_string()
 }
 
@@ -92,8 +93,56 @@ fn test_optimal() {
     assert_eq!(optimal(&words), "bagged".to_string());
 }
 
-fn filter_words(words: &HashSet<String>, count: u32) -> HashSet<String> {
-    HashSet::new()
+fn filter_words(guess: &String, count: u32, words: &HashSet<String>) -> HashSet<String> {
+    let mut remains = HashSet::new();
+    for word in words.iter() {
+	if word == guess {
+	    continue;
+	}
+	if compare_words(guess, word) == count {
+	    remains.insert(word.clone());
+	}
+    }
+    remains
+}
+
+#[test]
+fn test_filter_words() {
+    let words: HashSet<String> = HashSet::from([
+        "aerial".to_string(),
+        "babied".to_string(),
+        "bagged".to_string(),
+        "backer".to_string(),
+        "ballad".to_string(),
+        "bemoan".to_string(),
+        "calves".to_string(),
+        "canyon".to_string(),
+        "citrus".to_string(),
+        "decked".to_string(),
+        "denial".to_string(),
+        "dimmer".to_string(),
+        "faucet".to_string(),
+        "fasten".to_string(),
+        "ferret".to_string(),
+        "gambit".to_string(),
+        "garden".to_string(),
+        "genial".to_string(),
+        "healer".to_string(),
+        "heaven".to_string(),
+        "harden".to_string(),
+        "jagged".to_string(),
+        "killer".to_string()
+    ]);
+    let expect: HashSet<String> = HashSet::from([
+        "aerial".to_string(),
+        "citrus".to_string(),
+        "denial".to_string(),
+        "genial".to_string()
+    ]);
+    assert_eq!(
+	filter_words(&"bagged".to_string(), 0, &words),
+	expect
+    );
 }
 
 fn compare_words(word: &String, guess: &String) -> u32 {
